@@ -50,7 +50,31 @@ const factsList = document.querySelector(".facts-list");
 
 // Create DOM Elements: Render facts in list
 factsList.innerHTML = "";
-createFactsList(initialFacts);
+// createFactsList(initialFacts);
+
+// Load data from Supabas
+loadFacts();
+
+async function loadFacts() {
+  const res = await fetch(
+    "https://yaoyifmfyuxgabvmreum.supabase.co/rest/v1/facts",
+    {
+      headers: {
+        apikey:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlhb3lpZm1meXV4Z2Fidm1yZXVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzQxMzUwMTcsImV4cCI6MTk4OTcxMTAxN30.zS9OQ455zIRhLj5ePfBmueKjcZgQ_7byDUvMWt6sy50",
+        authorization:
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlhb3lpZm1meXV4Z2Fidm1yZXVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzQxMzUwMTcsImV4cCI6MTk4OTcxMTAxN30.zS9OQ455zIRhLj5ePfBmueKjcZgQ_7byDUvMWt6sy50",
+      },
+    }
+  );
+  const data = await res.json();
+  // console.log(data);
+
+  // const filteredData = data.filter((fact) => fact.category === "society");
+  // createFactsList(filteredData);
+
+  createFactsList(data);
+}
 
 function createFactsList(dataArray) {
   const htmlArr = dataArray.map(
@@ -59,32 +83,23 @@ function createFactsList(dataArray) {
     ${fact.text}
       <a class="source" href="fact.source" target="_blank">{Source}</a>
      </p>
-     <span class="tag" style="background-color: #3b82f6"
+     <span class="tag" style="background-color: ${
+       CATEGORIES.find((cat) => cat.name === fact.category).color
+     }"
      >${fact.category}</span
               >
     </li>`
   );
-  console.log(htmlArr);
+  // console.log(htmlArr);
   const html = htmlArr.join("");
   factsList.insertAdjacentHTML("afterbegin", html);
 }
 
 // factsList.insertAdjacentHTML("afterbegin", "<li>Jonas</li>");
 
-const htmlArr = initialFacts.map(
-  (fact) => `<li class="fact">
-  <p>
-  ${fact.text}
-    <a class="source" href="fact.source" target="_blank">{Source}</a>
-   </p>
-   <span class="tag" style="background-color: #3b82f6"
-   >${fact.category}</span
-            >
-  </li>`
-);
-console.log(htmlArr);
-const html = htmlArr.join("");
-factsList.insertAdjacentHTML("afterbegin", html);
+// console.log(htmlArr);
+// const html = htmlArr.join("");
+// factsList.insertAdjacentHTML("afterbegin", html);
 
 // Toggle form visibility
 btn.addEventListener("click", function () {
