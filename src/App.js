@@ -1,15 +1,5 @@
+import { useState } from "react";
 import "./style.css";
-
-const CATEGORIES = [
-  { name: "technology", color: "#3b82f6" },
-  { name: "science", color: "#16a34a" },
-  { name: "finance", color: "#ef4444" },
-  { name: "society", color: "#eab308" },
-  { name: "entertainment", color: "#db2777" },
-  { name: "health", color: "#14b8a6" },
-  { name: "history", color: "#f97316" },
-  { name: "news", color: "#8b5cf6" },
-];
 
 const initialFacts = [
   {
@@ -46,25 +36,16 @@ const initialFacts = [
 ];
 
 function App() {
-  const appTitle = "Today I Learned";
+  // *1. Define State variable
+  const [showForm, setShowForm] = useState(false);
 
   return (
     <>
-      {/* HEADER */}
-      <header className="header">
-        <div className="logo">
-          <img
-            src="logo.png"
-            height="68"
-            width="68"
-            alt="Today I learned logo"
-          />
-          <h1>{appTitle}</h1>
-        </div>
-        <button className="btn btn-large btn-open">Share a fact</button>
-      </header>
+      <Header showForm={showForm} setShowForm={setShowForm} />
 
-      <NewFactForm />
+      {/* 2. Use state variable */}
+      {showForm ? <NewFactForm /> : null}
+
       <main className="main">
         <CategoryFilter />
         <FactList />
@@ -73,12 +54,62 @@ function App() {
   );
 }
 
+function Header({ showForm, setShowForm }) {
+  const appTitle = "Today I Learned";
+
+  return (
+    <header className="header">
+      <div className="logo">
+        <img src="logo.png" height="68" width="68" alt="Today I learned logo" />
+        <h1>{appTitle}</h1>
+      </div>
+      <button
+        className="btn btn-large btn-open"
+        // 3. update state variable
+        onClick={() => setShowForm((show) => !show)}
+      >
+        {showForm ? "Close" : "Share a fact"}
+      </button>
+    </header>
+  );
+}
+
 function NewFactForm() {
   return <form className="fact-form">Fact Form</form>;
 }
 
+const CATEGORIES = [
+  { name: "technology", color: "#3b82f6" },
+  { name: "science", color: "#16a34a" },
+  { name: "finance", color: "#ef4444" },
+  { name: "society", color: "#eab308" },
+  { name: "entertainment", color: "#db2777" },
+  { name: "health", color: "#14b8a6" },
+  { name: "history", color: "#f97316" },
+  { name: "news", color: "#8b5cf6" },
+];
+
 function CategoryFilter() {
-  return <aside>Category filters</aside>;
+  return (
+    <aside>
+      <ul>
+        <li className="category">
+          <button className="btn btn-all-categories">All</button>
+        </li>
+
+        {CATEGORIES.map((cat) => (
+          <li key={cat.name} className="category">
+            <button
+              className="btn btn-category"
+              style={{ backgroundColor: cat.color }}
+            >
+              {cat.name}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </aside>
+  );
 }
 
 function FactList() {
